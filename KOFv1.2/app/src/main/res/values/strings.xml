@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">KOFv1.2</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="fake_name">懂球帝</string>
+    <string name="tabs_m1">首页</string>
+    <string name="tabs_m2">直播</string>
+    <string name="tabs_m3">圈子</string>
+    <string name="tabs_m4">数据</string>
+    <string name="sub1_tabs_1">头条</string>
+    <string name="sub1_tabs_2">懂球号</string>
+    <string name="sub1_tabs_3">国足</string>
+    <string name="sub1_tabs_4">集锦</string>
+    <string name="sub1_tabs_5">圈子</string>
+    <string name="sub1_tabs_6">专题</string>
+    <string name="sub1_tabs_7">深度</string>
+</resources>
