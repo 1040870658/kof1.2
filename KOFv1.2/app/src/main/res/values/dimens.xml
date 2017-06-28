@@ -9,5 +9,9 @@
     <dimen name="head_text_size">15sp</dimen>
     <dimen name="summary_text_size">12sp</dimen>
     <dimen name="navigation_size">25dp</dimen>
+    <dimen name="comment_small">12sp</dimen>
+    <dimen name="comment_large">15sp</dimen>
     <dimen name="tab">20dp</dimen>
+    <dimen name="live">12dp</dimen>
+    <dimen name="text_padding">6dp</dimen>
 </resources>

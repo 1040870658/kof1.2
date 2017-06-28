@@ -9,6 +9,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -20,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.ye.kofv12.com.example.com.example.util.SplashScreen;
 import com.example.ye.kofv12.com.example.fragments.FragmentMain_1;
@@ -29,10 +32,12 @@ import com.example.ye.kofv12.com.example.fragments.*;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_2;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_3;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public class MyActivity extends FragmentActivity {
 
+    private Thread netWorkThread;
     private DrawerLayout drawerLayout;
     private LinearLayout drawerSetting;
     private FragmentTabHost mainContent;
@@ -42,21 +47,36 @@ public class MyActivity extends FragmentActivity {
             R.layout.tablayout_m3,
             R.layout.tablayout_m4
     };
+    public static final int CONNETCTING = 0x10000001;
+    public static final int DISCONNECTING = 0x10000000;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case DISCONNECTING:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MyActivity.this);
+                    builder.setTitle("确认手机网络连接后重新打开程序");
+                    builder.setNegativeButton("退出", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int which) {
+                            System.exit(0);
+                        }
+                    });
+                    builder.show().setCancelable(false);
+                    break;
+                case CONNETCTING:
+                    break;
+                default:break;
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         SplashScreen splashScreen = new SplashScreen(this,R.style.mydialog,R.layout.layout_splash);
   //      splashScreen.show();
-        if (isNetworkAvailable(this) != true) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("确认手机网络连接后重新打开程序");
-            builder.setNegativeButton("退出", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int which) {
-                    System.exit(0);
-                }
-            });
-        }
+        netWorkThread = new Thread(new NetworkAvailableMannager(this,handler));
+        netWorkThread.start();
         customizeActionBar();
         initView();
     }
@@ -90,7 +110,7 @@ public class MyActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.my, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -105,20 +125,31 @@ public class MyActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo info = connectivity.getActiveNetworkInfo();
-            if (info != null && info.isConnected()) {
-                // 当前网络是连接的
-                if (info.getState() == NetworkInfo.State.CONNECTED) {
-                    // 当前所连接的网络可用
-                    return true;
+    public static class NetworkAvailableMannager implements Runnable {
+        private Context context;
+        private Handler handler;
+        public NetworkAvailableMannager(Context context,Handler handler){
+            this.handler = handler;
+            this.context = context;
+        }
+        @Override
+        public void run() {
+            ConnectivityManager connectivity = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity != null) {
+                NetworkInfo info = connectivity.getActiveNetworkInfo();
+                if (info != null && info.isConnected()) {
+                    // 当前网络是连接的
+                    if (info.getState() == NetworkInfo.State.CONNECTED) {
+                        // 当前所连接的网络可用
+                        handler.sendEmptyMessage(MyActivity.CONNETCTING);
+                        return;
+                    }
                 }
             }
+            handler.sendEmptyMessage(MyActivity.DISCONNECTING);
         }
-        return false;
+
     }
 
     void customizeActionBar() {

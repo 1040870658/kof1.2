@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class FragmentMain_1 extends Fragment{
     private FragmentTabHost mTabhost;
     private ViewPager viewPager;
     private FragmentPagerAdapter pagerAdapter;
-    private List<Fragment> subfragments;
+    protected List<Fragment> subfragments;
     private HorizontalScrollView hsv_container;
     private ScreenModel screenModel;
 
@@ -74,7 +75,7 @@ public class FragmentMain_1 extends Fragment{
         textView.setText(text);
         return contentview;
     }
-    private void initViewPager(){
+    protected void initViewPager(){
         pagerAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
@@ -107,26 +108,33 @@ public class FragmentMain_1 extends Fragment{
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (hsv_container == null)
+            return;
         outState.putInt("scroll_x",hsv_container.getScrollX());
         outState.putInt("scroll_y",hsv_container.getScrollY());
     }
 
+    protected ArrayList getTabhostResources(){
+        ArrayList<String> titles = new ArrayList<>();
+        titles.add(getString(R.string.sub1_tabs_1));
+        titles.add(getString(R.string.sub1_tabs_2));
+        titles.add(getString(R.string.sub1_tabs_3));
+        titles.add(getString(R.string.sub1_tabs_4));
+        titles.add(getString(R.string.sub1_tabs_5));
+        titles.add(getString(R.string.sub1_tabs_6));
+        titles.add(getString(R.string.sub1_tabs_7));
+        titles.add(getString(R.string.sub1_tabs_9));
+        return titles;
+    }
     private void initTabhost(LayoutInflater inflater){
         final TabWidget tabWidget = mTabhost.getTabWidget();
-        mTabhost.addTab(mTabhost.newTabSpec("sub_tab1_1")
-                .setIndicator(getIndicatorView(inflater,getString(R.string.sub1_tabs_1))), Fragment.class, null);
-        mTabhost.addTab(mTabhost.newTabSpec("sub_tab1_2")
-                .setIndicator(getIndicatorView(inflater,getString(R.string.sub1_tabs_2))), Fragment.class, null);
-        mTabhost.addTab(mTabhost.newTabSpec("sub_tab1_3")
-                .setIndicator(getIndicatorView(inflater,getString(R.string.sub1_tabs_3))), Fragment.class, null);
-        mTabhost.addTab(mTabhost.newTabSpec("sub_tab1_4")
-                .setIndicator(getIndicatorView(inflater,getString(R.string.sub1_tabs_4))), Fragment.class, null);
-        mTabhost.addTab(mTabhost.newTabSpec("sub_tab1_5")
-                .setIndicator(getIndicatorView(inflater,getString(R.string.sub1_tabs_5))), Fragment.class, null);
-        mTabhost.addTab(mTabhost.newTabSpec("sub_tab1_6")
-                .setIndicator(getIndicatorView(inflater,getString(R.string.sub1_tabs_6))), Fragment.class, null);
-        mTabhost.addTab(mTabhost.newTabSpec("sub_tab1_7")
-                .setIndicator(getIndicatorView(inflater,getString(R.string.sub1_tabs_7))), Fragment.class, null);
+        ArrayList<String> titles = getTabhostResources();
+        int index = 1;
+        for(String title : titles) {
+            mTabhost.addTab(mTabhost.newTabSpec("sub_tab_"+ index)
+                    .setIndicator(getIndicatorView(inflater, title)), Fragment.class, null);
+            index ++;
+        }
 
         int tab_count = tabWidget.getTabCount();
         for(int i = 0;i != tab_count;i ++){
@@ -143,15 +151,39 @@ public class FragmentMain_1 extends Fragment{
             }
         });
     }
-    private void initSubFragments(){
-        subfragments = new ArrayList<Fragment>();
-        subfragments.add(new SubFragment_1_1());
+    protected void initSubFragments(){
+      /*  subfragments = new ArrayList<Fragment>();
+        Bundle bundle = new Bundle();
+        bundle.putInt(SubFragment_1_1.ARG,1);
+        SubFragment_1_1 tmp = new SubFragment_1_1();
+        tmp.setArguments(bundle);
+        subfragments.add(tmp);
+        tmp = new SubFragment_1_1();
+        tmp.setArguments(bundle);
+        subfragments.add(tmp);
         subfragments.add(new SubFragment_1_2());
         subfragments.add(new SubFragment_1_3());
         subfragments.add(new SubFragment_1_4());
         subfragments.add(new SubFragment_1_5());
         subfragments.add(new SubFragment_1_6());
-        subfragments.add(new SubFragment_1_7());
+        subfragments.add(new SubFragment_1_7());*/
+        subfragments = new ArrayList<Fragment>();
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.IMPORTANT));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.LAUGH));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.TALK));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.EPL));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.CSL));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.SPL));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.GPL));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.ISA));
+        subfragments.add(SetUpSubFragment(SubFragment_1_1.SPECIAL));
+    }
+    protected SubFragment_1_1 SetUpSubFragment(int arg){
+        Bundle bundle = new Bundle();
+        bundle.putInt(SubFragment_1_1.ARG,arg);
+        SubFragment_1_1 tmp = new SubFragment_1_1();
+        tmp.setArguments(bundle);
+        return tmp;
     }
     /*private void setSubTabs(){
         tabLayout.getTabAt(0).setText(getString(R.string.sub1_tabs_1));

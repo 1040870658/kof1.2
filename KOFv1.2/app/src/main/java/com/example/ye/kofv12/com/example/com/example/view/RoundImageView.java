@@ -6,15 +6,20 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.widget.ImageView;
 
 /**
  * Created by ye on 2016/9/6.
  */
 public class RoundImageView extends ImageView {
-    public RoundImageView(Context context) {
+    public RoundImageView(Context context, AttributeSet attributeSet) {
+        super(context,attributeSet);
+    }
+    public RoundImageView(Context context){
         super(context);
     }
+
     @Override
     protected void onDraw(Canvas canvas) {
         Paint mPaint = new Paint();

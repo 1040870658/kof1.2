@@ -6,4 +6,6 @@
     <color name="brown">#2a2727</color>
     <color name="light_brown">#8a8a8a</color>
     <color name="black">#000000</color>
+    <color name="dark_blue">#FF385C76</color>
+    <color name="light_gray">#FFE4E7E9</color>
 </resources>

@@ -20,7 +20,6 @@
             android:id="@android:id/tabs"
             android:layout_width="@dimen/navigation_size"
             android:layout_height="@dimen/navigation_size"
-            android:layout_weight="0"
             android:orientation="horizontal" />
         </HorizontalScrollView>
         <FrameLayout
