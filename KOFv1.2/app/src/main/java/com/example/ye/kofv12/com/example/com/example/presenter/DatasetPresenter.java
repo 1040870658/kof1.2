@@ -42,17 +42,18 @@ public class DatasetPresenter {
     private void proceedData(String html){
         String begin = "td class=\"team\"";
         String end = "div class=\"loading\"";
-        String img_b = "\" src=\"";
+        String img_b = "src=\"";
+        String img_b_delta = "http://img";
         String img_e = "\" alt=";
         String name_b = "\" alt=\"\">";
-        String name_e = "</td>";
+        String name_e = "</a>";
         String value_b = "<td>";
         String value_e = "</td>";
         html = html.substring(html.indexOf(begin),html.indexOf(end));
         while(html.indexOf(begin) != -1){
             html = html.substring(html.indexOf(begin) + 1);
             DatasetModel datasetModel = new DatasetModel();
-            String img = html.substring(html.indexOf(img_b)+img_b.length(),html.indexOf(img_e));
+            String img = html.substring(html.indexOf(img_b+img_b_delta)+img_b.length(),html.indexOf(img_e));
             String name = html.substring(html.indexOf(name_b) + name_b.length(), html.indexOf(name_e));
             html = html.substring(html.indexOf(value_e)+value_e.length());
             int values[] = new int[VALUES];

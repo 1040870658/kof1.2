@@ -38,7 +38,9 @@ import com.example.ye.kofv12.com.example.model.DecoratorModel;
 import com.example.ye.kofv12.com.example.model.NewsModel;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;

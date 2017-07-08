@@ -88,15 +88,17 @@ public class MatchPresenter implements Runnable{
             String timeBegin = "td class=\"times\">";
             String cut_timeEnd = "</td>";
             String roundBegin = "td class=\"round\">";
-            String cut_roundEnd = "</td>";
+            String roundEnd = "</td>";
+            String cut_roundEnd = "<td class=\"away\">";
             String awaySrcBegin = "img src=\"";
             String cut_awaySrcEnd = "\" onerror";
             String awayNameBegin = "\">";
-            String cut_awayNameEnd = "</td>";
+            String cut_awayNameEnd = "</a>";
             String statBegin = "<td class=";
             String statStart = "\">";
-            String cut_statEnd = "</td>";
-            String homeNameBegin = "<td class=\"home\">";
+            String statEnd = "</td>";
+            String cut_statEnd = "</td class=\"home\">";
+            String homeNameBegin = ".html\">";
             String homeNameEnd = "<img src=\"";
             String homeSrcEnd = "\" onerror";
             String linkBegin = "<a href=\"";
@@ -154,7 +156,7 @@ public class MatchPresenter implements Runnable{
 
                     matchModel.setRound(subHtml.substring(subHtml.indexOf(roundBegin) +
                                     roundBegin.length(),
-                            subHtml.indexOf(cut_roundEnd)));
+                            subHtml.indexOf(roundEnd)));
 
                     subHtml = subHtml.substring(subHtml.indexOf(cut_roundEnd) + cut_roundEnd.length());
 
@@ -173,7 +175,7 @@ public class MatchPresenter implements Runnable{
                     int statIndex = subHtml.indexOf(statStart);
                     matchModel.setStat(subHtml.substring(statIndex +
                             statStart.length(),
-                            subHtml.indexOf(cut_statEnd)));
+                            subHtml.indexOf(statEnd)));
                     subHtml = subHtml.substring(subHtml.indexOf(cut_statEnd) + cut_statEnd.length());
 
                     matchModel.setHomeName(subHtml.substring(subHtml.indexOf(homeNameBegin) +
@@ -186,6 +188,9 @@ public class MatchPresenter implements Runnable{
 
                     int linkIndex = subHtml.indexOf(link);
                     int linkExist = subHtml.indexOf(linkBegin);
+                    while(linkExist > 0 && linkIndex > linkExist){
+                        linkExist = subHtml.indexOf(linkBegin,linkExist + 1);
+                    }
                     if (linkExist > 0 && linkExist - linkIndex < 50) {
                         matchModel.setLink(subHtml.substring(subHtml.indexOf(linkBegin) +
                                         linkBegin.length(),

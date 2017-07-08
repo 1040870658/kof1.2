@@ -91,6 +91,7 @@ public class DatasetModel {
     }
 
     public void setName(String name) {
+        name = name.trim();
         this.name = name;
     }
 
