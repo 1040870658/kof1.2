@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.ye.kofv12.MyActivity;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.presenter.DatasetPresenter;
 import com.example.ye.kofv12.com.example.com.example.util.MyDecoration;
@@ -43,7 +44,7 @@ public class SubFragment_4_1 extends Fragment {
     private List<DatasetModel> datasetModels;
     private DatasetPresenter datasetPresenter;
     private DataSetHandler handler = new DataSetHandler();
-    private Thread thread;
+    //private Thread thread;
     private int identity = DatasetPresenter.CSL;
     private int screen_width_6;
     private int screen_width_4;
@@ -83,8 +84,9 @@ public class SubFragment_4_1 extends Fragment {
             recyclerView.setAdapter(dataAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.addItemDecoration(new MyDecoration(getActivity(),MyDecoration.VERTICAL_LIST));
-            thread = new Thread(new RetrieveDataset(datasetPresenter,identity));
-            thread.start();
+            //thread = new Thread(new RetrieveDataset(datasetPresenter,identity));
+            //thread.start();
+            MyActivity.executorService.submit(new RetrieveDataset(datasetPresenter,identity));
         }
         return contentView;
     }

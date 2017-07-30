@@ -99,14 +99,14 @@ public class DetailActivity extends Activity{
                         "var header = document.getElementById('header');"+
                         "var btnOpen = document.getElementById('btn_open');"+
                         "var r_btnOpen = btnOpen.parentNode;"+
-                        "var vote = document.getElementById('voteTemplate');"+
-                        "vote.remove();"+
+                        //"var vote = document.getElementById('voteTemplate');"+
+                        //"vote.remove();"+
                         "r_btnOpen.remove();"+
                         "header.remove();"+
                         "footer.remove();"+
-                        "var btns = document.getElementsByClassName('btn');"+
-                        "for(var r_btn in btns){"+
-                        "r_btn.parentNode.remove();}"+
+                        //"var btns = document.getElementsByClassName('btn');"+
+                        //"for(var r_btn in btns){"+
+                        //"r_btn.parentNode.remove();}"+
                         "window.scrollBy(0,-119)"+
                         "}";
               //  view.loadUrl("javascript:window.showHtml.showHtml('<head>'+" +

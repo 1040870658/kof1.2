@@ -8,6 +8,7 @@ import com.example.ye.kofv12.com.example.model.CommentModel;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,13 +29,13 @@ public class VideoPresenter implements Runnable {
     public static final String VideoURL = "https://www.dongqiudi.com/article/";
     private OkHttpClient client;
     private boolean videoLoaded = false;
-    private Handler handler;
+    private WeakReference<Handler> handler;
     private List<CommentModel> commentModels;
     private int arg;
 
     public VideoPresenter(List<CommentModel> commentModels, Handler handler, int arg) {
         this.commentModels = commentModels;
-        this.handler = handler;
+        this.handler = new WeakReference<Handler>(handler);
         this.arg = arg;
     }
 
@@ -50,7 +51,8 @@ public class VideoPresenter implements Runnable {
             if (videoLoaded == false)
                 proceedVideo(html);
             proceedComments(html);
-            handler.sendEmptyMessage(SubFragment_1_1.REFRESH_COMPLETED);
+            if(handler.get() != null)
+                handler.get().sendEmptyMessage(SubFragment_1_1.REFRESH_COMPLETED);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,13 +70,17 @@ public class VideoPresenter implements Runnable {
         bundleTop.putParcelableArrayList("topComment", topComments);
         messageTop.setData(bundleTop);
         messageTop.what = TOP_COMMENT;
-        handler.sendMessage(messageTop);
+        if(handler.get() == null)
+            return;
+        handler.get().sendMessage(messageTop);
 
         proceedCommentProcess(html, allComments, false);
         bundleAll.putParcelableArrayList("allComment", allComments);
         messageAll.what = ALL_COMMENT;
         messageAll.setData(bundleAll);
-        handler.sendMessage(messageAll);
+        if(handler.get() == null)
+            return;
+        handler.get().sendMessage(messageAll);
     }
 
     private void proceedCommentProcess(String html, List comments, boolean isTop) {
@@ -154,8 +160,10 @@ public class VideoPresenter implements Runnable {
         Message message = new Message();
         message.setData(bundle);
         message.what = VIDEO_SOURCE;
-        handler.sendMessage(message);
-        videoLoaded = true;
+        if (handler.get()!=null) {
+            handler.get().sendMessage(message);
+            videoLoaded = true;
+        }
     }
 
     @Override

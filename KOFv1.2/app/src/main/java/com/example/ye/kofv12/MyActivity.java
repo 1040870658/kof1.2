@@ -36,6 +36,9 @@ import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_2;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_3;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class MyActivity extends FragmentActivity {
 
@@ -52,6 +55,7 @@ public class MyActivity extends FragmentActivity {
     private StartReceiver receiver;
     public static final int CONNETCTING = 0x10000001;
     public static final int DISCONNECTING = 0x10000000;
+    public static ExecutorService executorService = Executors.newCachedThreadPool();
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {

@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.example.ye.kofv12.com.example.model.DatasetModel;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -24,11 +25,11 @@ public class DatasetPresenter {
     private final int VALUES = 8;
     private OkHttpClient client;
     public static final String DataURL = "http://www.dongqiudi.com/data";
-    private Handler handler;
+    private WeakReference<Handler> handler;
     private List<DatasetModel> datasetModels;
     public DatasetPresenter(List<DatasetModel> datasetModels,Handler handler){
         this.datasetModels = datasetModels;
-        this.handler = handler;
+        this.handler = new WeakReference<Handler>(handler);
     }
     public void requestData(int arg){
         try {
@@ -75,6 +76,7 @@ public class DatasetPresenter {
             datasetModel.setMark(values[7]);
             datasetModels.add(datasetModel);
         }
-        handler.sendEmptyMessage(DatasetPresenter.REQUEST_FINISHED);
+        if(handler.get() != null)
+            handler.get().sendEmptyMessage(DatasetPresenter.REQUEST_FINISHED);
     }
 }

@@ -38,7 +38,7 @@ public class CommentActivity extends Activity {
     private NewsModel newsModel;
     private CommentHandler commentHandler;
     private CommentPresenter commentPresenter;
-    private Thread thread;
+    //private Thread thread;
     private ProgressBar progressBar;
     private DecoratorModel decoratorModel;
     @Override
@@ -60,8 +60,9 @@ public class CommentActivity extends Activity {
         refreshRecyclerViewManager = new RefreshRecyclerViewManager(this,commentPresenter,commentAdapter);
         refreshRecyclerViewManager.addItemDecoration(new MyDecoration(this,MyDecoration.VERTICAL_LIST));
         refreshRecyclerViewManager.addItemDecoration(new HoverListDecorator(decoratorModel));
-        thread = new Thread(commentPresenter);
-        thread.start();
+      //  thread = new Thread(commentPresenter);
+        //thread.start();
+        MyActivity.executorService.submit(commentPresenter);
     }
     private class CommentHandler extends Handler{
         @Override

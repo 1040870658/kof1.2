@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.ye.kofv12.MyActivity;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.adapter.GroupAdapter;
 import com.example.ye.kofv12.com.example.com.example.adapter.LiveAdapter;
@@ -37,7 +38,7 @@ public class SubFragment_2_1 extends Fragment {
     private List[] matchModels;
     private List<List> matchLists;
     private View contentView;
-    private Thread thread;
+    //private Thread thread;
     private GroupAdapter adapter;
     private DecoratorModel decoratorModel;
     private RefreshRecyclerViewManager refreshRecyclerViewManager;
@@ -56,8 +57,9 @@ public class SubFragment_2_1 extends Fragment {
             refreshRecyclerViewManager = new RefreshRecyclerViewManager(getActivity(),contentView,matchPresenter,adapter);
             refreshRecyclerViewManager.addItemDecoration(hoverListDecorator);
             refreshRecyclerViewManager.addItemDecoration(new MyDecoration(getContext(),MyDecoration.VERTICAL_LIST));
-            thread = new Thread(matchPresenter);
-            thread.start();
+           // thread = new Thread(matchPresenter);
+            //thread.start();
+            MyActivity.executorService.submit(matchPresenter);
         }
         return contentView;
     }

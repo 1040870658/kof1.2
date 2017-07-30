@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,12 +46,12 @@ public class MatchPresenter implements Runnable{
     private final int VALUES = 8;
     private OkHttpClient client;
     public static final String DataURL = "https://www.dongqiudi.com/match/fetch_new?tab=null&date=";
-    private Handler handler;
+    private WeakReference<Handler> handler;
     private List[] matchModels;
 
     public MatchPresenter(List[] matchModels, Handler handler) {
         this.matchModels = matchModels;
-        this.handler = handler;
+        this.handler = new WeakReference<Handler>(handler);
     }
 
     public void requestData() {
@@ -139,12 +140,13 @@ public class MatchPresenter implements Runnable{
             bundle.putStringArrayList("titles",titles);
             Message message = new Message();
             message.setData(bundle);
-            handler.sendMessage(message);
+            if(handler.get() != null)
+                handler.get().sendMessage(message);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    private void proceedData(String html) {
+   /* private void proceedData(String html) {
         try {
             JSONObject jsonObject = new JSONObject(html);
             html = jsonObject.getString("html");
@@ -295,7 +297,7 @@ public class MatchPresenter implements Runnable{
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     @Override
     public void run() {

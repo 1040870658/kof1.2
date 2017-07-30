@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.ye.kofv12.MyActivity;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.adapter.HotNewsPageAdapter;
 import com.example.ye.kofv12.com.example.com.example.adapter.OtherAdapter;
@@ -69,7 +70,7 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
     private Handler handler = new Sub_1_Handler();
     private List<NewsModel> hotNews;
     private List<NewsModel> news;
-    private Thread thread;
+    //private Thread thread;
     private int type;
     private NewsPresenter newsPresenter;
 
@@ -130,12 +131,15 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(thread == null){
+        /*if(thread == null){
             newsPresenter = new NewsPresenter(hotNews,news,handler);
             newsPresenter.setNewsurl(type);
             thread = new Thread(new RetrieveNews(newsPresenter,type,type == 1));
             thread.start();
-        }
+        }*/
+        newsPresenter = new NewsPresenter(hotNews,news,handler);
+        newsPresenter.setNewsurl(type);
+        MyActivity.executorService.submit(new RetrieveNews(newsPresenter,type,type == 1));
         if (contentView == null) {
             hsv_adapter = simpleAdapterFactory(type);
             contentView = inflater.inflate(R.layout.layout_subfragment1_1, null);
@@ -163,8 +167,9 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
     public void onRefresh() {
         synchronized (newsPresenter){
             newsPresenter.setNewsurl(1);
-            thread = new Thread(new RetrieveNews(newsPresenter,1,type == 1));
-            thread.start();
+           // thread = new Thread(new RetrieveNews(newsPresenter,1,type == 1));
+            //thread.start();
+            MyActivity.executorService.submit(new RetrieveNews(newsPresenter,type,type == 1));
         }
         handler.sendEmptyMessageDelayed(REFRESH_COMPLETED, 1000);
     }
@@ -371,8 +376,9 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
     public void LoadMore(int page){
         synchronized (newsPresenter) {
             newsPresenter.setNewsurl(page);
-            thread = new Thread(new RetrieveNews(newsPresenter, page, type == 1));
-            thread.start();
+           // thread = new Thread(new RetrieveNews(newsPresenter, page, type == 1));
+           // thread.start();
+            MyActivity.executorService.submit(new RetrieveNews(newsPresenter,page,type == 1));
         }
         handler.sendEmptyMessageDelayed(NewsPresenter.NEWSFINSH,1000);
     }
@@ -407,8 +413,5 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (thread != null && thread.isAlive()) {
-            thread.interrupt();
-        }
     }
 }

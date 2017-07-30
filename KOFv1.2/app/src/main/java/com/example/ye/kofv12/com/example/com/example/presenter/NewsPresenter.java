@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +27,11 @@ public class NewsPresenter {
     private String newsUrl = NEWSURL;
     private List<NewsModel> hotNews;
     private List<NewsModel> news;
-    private Handler handler;
+    private WeakReference<Handler> handler;
     private OkHttpClient client;
     public NewsPresenter(List<NewsModel> hotNews,List<NewsModel> news,Handler handler){
         this.hotNews = hotNews;
-        this.handler = handler;
+        this.handler = new WeakReference<Handler>(handler);
         this.news = news;
     }
     public void setNewsurl(int archive){
@@ -105,7 +106,8 @@ public class NewsPresenter {
                 differList.add(newsModel);
             }
             news.addAll(differList);
-            handler.sendEmptyMessage(NEWSFINSH);
+            if(handler.get() != null)
+                handler.get().sendEmptyMessage(NEWSFINSH);
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -135,8 +137,8 @@ public class NewsPresenter {
             tmp.setImage(img);
             hotNews.add(tmp);
         }
-        if(hotNews != null && hotNews.size() != 0)
-             handler.sendEmptyMessage(HOTNEWSFINISH);
+        if(hotNews != null && hotNews.size() != 0 && handler.get() != null)
+             handler.get().sendEmptyMessage(HOTNEWSFINISH);
     }
 
     private void setNews(String response) {
@@ -178,7 +180,8 @@ public class NewsPresenter {
                 differList.add(newsModel);
             }
             news.addAll(0,differList);
-            handler.sendEmptyMessage(NEWSFINSH);
+            if(handler.get() != null)
+                handler.get().sendEmptyMessage(NEWSFINSH);
         }catch (JSONException e){
             e.printStackTrace();
         }

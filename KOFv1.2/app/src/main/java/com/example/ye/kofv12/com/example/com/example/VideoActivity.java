@@ -26,6 +26,7 @@ import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
+import com.example.ye.kofv12.MyActivity;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.adapter.CommentAdapter;
 import com.example.ye.kofv12.com.example.com.example.presenter.VideoPresenter;
@@ -65,7 +66,7 @@ public class VideoActivity extends Activity {
     private LinearLayout.LayoutParams full_param;
     private LinearLayout.LayoutParams part_param;
     private RelativeLayout videoContainer;
-    private ExecutorService excecutors;
+    //private ExecutorService excecutors;
     private MyMediaController mediaController;
     private RelativeLayout rlCover;
     private String url = "https://www.dongqiudi.com/article/";
@@ -81,14 +82,14 @@ public class VideoActivity extends Activity {
         setContentView(R.layout.layout_video);
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        excecutors =  Executors.newFixedThreadPool(2);
+        //excecutors =  Executors.newFixedThreadPool(2);
         newsModel = getIntent().getParcelableExtra("news");
         commentModels = new ArrayList<>();
         videoHandler = new VideoHandler();
         videoPresenter = new VideoPresenter(commentModels,videoHandler, newsModel.getId());
         initVideo();
         initComments();
-        excecutors.submit(videoPresenter);
+        MyActivity.executorService.submit(videoPresenter);
     }
     private void initComments(){
         topComments = new ArrayList<CommentModel>();
@@ -155,7 +156,7 @@ public class VideoActivity extends Activity {
                     rlCover.setVisibility(View.GONE);
                     cover.setVisibility(View.VISIBLE);
                     if(background == null) {
-                        future = excecutors.submit(new ImageDecoder(metrics, (String) bundle.get("thumb"),videoHandler));
+                        future = MyActivity.executorService.submit(new ImageDecoder(metrics, (String) bundle.get("thumb"),videoHandler));
                     }
                     else{
                         videoView.setBackgroundDrawable(background);
@@ -192,7 +193,7 @@ public class VideoActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         videoView.suspend();
-        excecutors.shutdown();
+      //  excecutors.shutdown();
     }
     private class  MyMediaController extends MediaController{
         public MyMediaController(Context context) {

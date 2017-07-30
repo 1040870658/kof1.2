@@ -22,6 +22,8 @@ import com.example.ye.kofv12.com.example.subfragments.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by ye on 2016/9/2.
@@ -37,7 +39,6 @@ public class FragmentMain_1 extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e("fragment_1","createView");
         if(contentView == null) {
             contentView = getActivity().getLayoutInflater().inflate(R.layout.layout_fragmentmain_1, null);
             screenModel = new ScreenModel(this.getActivity());
@@ -56,7 +57,6 @@ public class FragmentMain_1 extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         initScroller(savedInstanceState);
         super.onActivityCreated(savedInstanceState);
-        Log.e("fragment_1","activityCreated");
     }
 
     private void initScroller(Bundle savedInstanceState){
