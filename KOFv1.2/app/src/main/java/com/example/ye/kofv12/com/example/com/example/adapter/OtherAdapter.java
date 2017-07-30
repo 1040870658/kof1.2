@@ -11,14 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
-import com.example.ye.kofv12.MyActivity;
+import com.bumptech.glide.Glide;
 import com.example.ye.kofv12.R;
-import com.example.ye.kofv12.com.example.com.example.listener.StartActivityListener;
 import com.example.ye.kofv12.com.example.model.NewsModel;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -38,9 +35,9 @@ public class OtherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             new DisplayImageOptions.Builder()
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
-                    .showImageOnFail(R.drawable.ic_launcher)
+                    .showImageOnFail(R.drawable.my_ic_launcher)
                     .showImageOnLoading(R.drawable.abc_list_pressed_holo_dark)
-                    .showImageForEmptyUri(R.drawable.ic_launcher)
+                    .showImageForEmptyUri(R.drawable.my_ic_launcher)
                     .build();
 
     @Override
@@ -64,7 +61,8 @@ public class OtherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         holder.summary.setText(news.get(position).getSummary());
         holder.comment_total.setText(news.get(position).getComment_total()+"评论");
         holder.setListener(news.get(position),context);
-        ImageLoader.getInstance().displayImage(news.get(position).getImage(), holder.image, displayImageOptions);
+        //ImageLoader.getInstance().displayImage(news.get(position).getImage(), holder.image, displayImageOptions);
+        Glide.with(context).load(news.get(position).getImage()).into(holder.image);
 
     }
 

@@ -11,8 +11,8 @@
         android:padding="@dimen/live"
         >
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentTop="true"
             android:paddingTop="@dimen/live"
             android:paddingLeft="@dimen/live"
@@ -22,7 +22,9 @@
             android:layout_height="wrap_content"
              android:layout_centerHorizontal="true"
              android:layout_below="@id/iv_home"
+             android:layout_alignParentBottom="true"
              android:id="@+id/tv_home"
+             android:textSize="@dimen/small_text"
             />
     </RelativeLayout>
     <RelativeLayout
@@ -32,14 +34,17 @@
         android:layout_centerHorizontal="true"
         android:padding="@dimen/live">
         <TextView
+            android:textSize="@dimen/comment_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/text_padding"
+            android:paddingRight="10dp"
             android:textColor="@color/light_brown"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
             android:id="@+id/tv_round"/>
         <TextView
+            android:textSize="@dimen/small_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -47,10 +52,12 @@
             android:padding="@dimen/text_padding"
             android:id="@+id/ctv_panel"/>
         <TextView
+            android:textSize="@dimen/small_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:padding="@dimen/text_padding"
+            android:paddingLeft="10dp"
             android:layout_below="@id/ctv_panel"
             android:id="@+id/tv_time"/>
     </RelativeLayout>
@@ -64,15 +71,17 @@
         <ImageView
             android:padding="@dimen/live"
             android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:id="@+id/iv_away"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_away"
             android:layout_alignLeft="@id/iv_away"
+            android:textSize="@dimen/small_text"
             android:id="@+id/tv_away"
+            android:layout_alignParentBottom="true"
             />
     </RelativeLayout>
 </RelativeLayout>

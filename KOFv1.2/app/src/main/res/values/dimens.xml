@@ -14,4 +14,5 @@
     <dimen name="tab">20dp</dimen>
     <dimen name="live">12dp</dimen>
     <dimen name="text_padding">6dp</dimen>
+    <dimen name="small_text">10sp</dimen>
 </resources>

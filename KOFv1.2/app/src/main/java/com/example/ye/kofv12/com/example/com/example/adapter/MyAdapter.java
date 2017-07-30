@@ -41,9 +41,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             new DisplayImageOptions.Builder()
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
-                    .showImageOnFail(R.drawable.ic_launcher)
+                    .showImageOnFail(R.drawable.my_ic_launcher)
                     .showImageOnLoading(R.drawable.abc_list_pressed_holo_dark)
-                    .showImageForEmptyUri(R.drawable.ic_launcher)
+                    .showImageForEmptyUri(R.drawable.my_ic_launcher)
                     .build();
 
     @Override

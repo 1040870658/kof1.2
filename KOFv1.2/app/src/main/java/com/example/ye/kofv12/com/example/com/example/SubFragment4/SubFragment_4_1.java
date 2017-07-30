@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.presenter.DatasetPresenter;
 import com.example.ye.kofv12.com.example.com.example.util.MyDecoration;
@@ -99,7 +100,7 @@ public class SubFragment_4_1 extends Fragment {
             if(viewType == 0){
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dataset_title,null);
                 HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
-                setWidth(headerViewHolder.team,screen_width_6,0);
+                setWidth(headerViewHolder.team,screen_width_2+screen_width_3,0);
                 setWidth(headerViewHolder.match,screen_width_1,0);
                 setWidth(headerViewHolder.win,screen_width_1,0);
                 setWidth(headerViewHolder.loose,screen_width_1,0);
@@ -113,7 +114,7 @@ public class SubFragment_4_1 extends Fragment {
                 if (viewType < 4)
                     view.setBackgroundResource(R.color.green);
                 ItemViewHolder itemViewHolder = new ItemViewHolder(view);
-                setWidth(itemViewHolder.team,screen_width_2,screen_height);
+                setWidth(itemViewHolder.team,screen_width_3,screen_height);
                 setWidth(itemViewHolder.rank,screen_width_1,screen_height);
                 setWidth(itemViewHolder.match,screen_width_1,screen_height);
                 setWidth(itemViewHolder.win,screen_width_1,screen_height);
@@ -142,7 +143,8 @@ public class SubFragment_4_1 extends Fragment {
                 itemViewHolder.win.setText(""+datasetModel.getWin_num());
                 itemViewHolder.draw.setText(""+datasetModel.getDraw_num());
                 itemViewHolder.match.setText(""+datasetModel.getMatch_num());
-                ImageLoader.getInstance().displayImage(datasetModel.getLogo(),itemViewHolder.iv_team);
+                //ImageLoader.getInstance().displayImage(datasetModel.getLogo(),itemViewHolder.iv_team);
+                Glide.with(getActivity()).load(datasetModel.getLogo()).into(itemViewHolder.iv_team);
             }
         }
 

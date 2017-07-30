@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.adapter.HotNewsPageAdapter;
 import com.example.ye.kofv12.com.example.com.example.adapter.OtherAdapter;
@@ -29,12 +30,10 @@ import com.example.ye.kofv12.com.example.com.example.adapter.VideoAdapter;
 import com.example.ye.kofv12.com.example.com.example.listener.DetailNewsListener;
 import com.example.ye.kofv12.com.example.com.example.listener.StartActivityListener;
 import com.example.ye.kofv12.com.example.com.example.presenter.NewsPresenter;
-import com.example.ye.kofv12.com.example.com.example.util.HoverListDecorator;
 import com.example.ye.kofv12.com.example.com.example.util.MyDecoration;
 import com.example.ye.kofv12.com.example.com.example.util.RetrieveNews;
 import com.example.ye.kofv12.com.example.model.NewsModel;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.example.ye.kofv12.com.example.com.example.listener.NewsScrollListener;
 
 import java.util.ArrayList;
@@ -154,8 +153,8 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
             datas[1] = news;
           //  recyclerView.addItemDecoration(new HoverListDecorator(getResources(),datas));
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.addOnScrollListener(new NewsScrollListener(ImageLoader.getInstance(),getActivity(),handler,true));
-
+          //  recyclerView.addOnScrollListener(new NewsScrollListener(ImageLoader.getInstance(),getActivity(),handler,true));
+            recyclerView.addOnScrollListener(new NewsScrollListener(getActivity(),handler,true));
         }
         return contentView;
     }
@@ -176,9 +175,9 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
                 new DisplayImageOptions.Builder()
                         .cacheInMemory(true)
                         .cacheOnDisk(true)
-                        .showImageOnFail(R.drawable.ic_launcher)
+                        .showImageOnFail(R.drawable.my_ic_launcher)
                         .showImageOnLoading(R.drawable.abc_list_pressed_holo_dark)
-                        .showImageForEmptyUri(R.drawable.ic_launcher)
+                        .showImageForEmptyUri(R.drawable.my_ic_launcher)
                         .build();
 
         @Override
@@ -218,7 +217,8 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
                 holder.summary.setText(news.get(position).getSummary());
                 holder.comment_total.setText(news.get(position).getComment_total()+commentString);
 
-                ImageLoader.getInstance().displayImage(news.get(position).getImage(),holder.image,displayImageOptions);
+                //ImageLoader.getInstance().displayImage(news.get(position).getImage(),holder.image,displayImageOptions);
+               Glide.with(getActivity()).load(news.get(position).getImage()).into(holder.image);
             }
         }
 
@@ -350,10 +350,11 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
             imageHandler.sendEmptyMessageDelayed(ROLLHOTNEWS, ROLLINGSPEED);
         }
         public void setImageViews(){
-            DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true).build();
+           // DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true).build();
             for (NewsModel item : newsModel) {
                 ImageView imageView = (ImageView) LayoutInflater.from(view.getContext()).inflate(R.layout.hot_image, null);
-                ImageLoader.getInstance().displayImage(item.getImage(), imageView, displayImageOptions);
+                //ImageLoader.getInstance().displayImage(item.getImage(), imageView, displayImageOptions);
+                Glide.with(context).load(item.getImage()).into(imageView);
                 imageView.setOnClickListener(new StartActivityListener(item,context));
                 imageViews.add(imageView);
             }

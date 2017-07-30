@@ -27,6 +27,7 @@
          android:layout_alignParentTop="true"
          android:layout_toRightOf="@id/rl_thumb"
          android:id="@+id/tv_title"
+         android:textSize="@dimen/comment_small"
          android:maxLines="2"/>
     <TextView
         android:layout_width="wrap_content"
@@ -35,6 +36,7 @@
         android:textColor="@android:color/darker_gray"
         android:layout_below="@id/tv_title"
         android:id="@+id/tv_summary"
+        android:textSize="@dimen/small_text"
         android:layout_toRightOf="@id/rl_thumb"/>
     <TextView
         android:layout_width="wrap_content"

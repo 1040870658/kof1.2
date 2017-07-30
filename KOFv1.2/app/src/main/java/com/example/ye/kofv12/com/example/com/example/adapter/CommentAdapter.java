@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.view.RoundImageView;
 import com.example.ye.kofv12.com.example.model.CommentModel;
@@ -37,7 +38,8 @@ public class CommentAdapter extends GroupAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         CommentViewHolder viewHolder = (CommentViewHolder)holder;
         CommentModel commentModel = (CommentModel)data.get(position);
-        ImageLoader.getInstance().displayImage(commentModel.getImgSrc(),viewHolder.headImageView);
+//        ImageLoader.getInstance().displayImage(commentModel.getImgSrc(),viewHolder.headImageView);
+        Glide.with(context).load(commentModel.getImgSrc()).into(viewHolder.headImageView);
         viewHolder.contentTextView.setText(commentModel.getComment());
         viewHolder.nameTextView.setText(commentModel.getUserName());
         viewHolder.agreeTextView.setText(commentModel.getAgreeNum()+"");

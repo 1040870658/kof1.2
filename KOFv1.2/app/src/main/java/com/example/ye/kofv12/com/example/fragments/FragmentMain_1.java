@@ -1,5 +1,6 @@
 package com.example.ye.kofv12.com.example.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ public class FragmentMain_1 extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.e("fragment_1","createView");
         if(contentView == null) {
             contentView = getActivity().getLayoutInflater().inflate(R.layout.layout_fragmentmain_1, null);
             screenModel = new ScreenModel(this.getActivity());
@@ -54,6 +56,7 @@ public class FragmentMain_1 extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         initScroller(savedInstanceState);
         super.onActivityCreated(savedInstanceState);
+        Log.e("fragment_1","activityCreated");
     }
 
     private void initScroller(Bundle savedInstanceState){
@@ -87,7 +90,7 @@ public class FragmentMain_1 extends Fragment{
                 return subfragments.size();
             }
         };
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        /*viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
 
@@ -102,7 +105,7 @@ public class FragmentMain_1 extends Fragment{
             public void onPageScrollStateChanged(int i) {
 
             }
-        });
+        });*/
         viewPager.setAdapter(pagerAdapter);
     }
 

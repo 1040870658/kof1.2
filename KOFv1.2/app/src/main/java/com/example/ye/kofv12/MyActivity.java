@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.ye.kofv12.com.example.StartReceiver;
 import com.example.ye.kofv12.com.example.com.example.util.SplashScreen;
 import com.example.ye.kofv12.com.example.fragments.FragmentMain_1;
 import com.example.ye.kofv12.com.example.fragments.FragmentMain_2;
@@ -32,7 +35,6 @@ import com.example.ye.kofv12.com.example.fragments.*;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_2;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_3;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public class MyActivity extends FragmentActivity {
@@ -47,6 +49,7 @@ public class MyActivity extends FragmentActivity {
             R.layout.tablayout_m3,
             R.layout.tablayout_m4
     };
+    private StartReceiver receiver;
     public static final int CONNETCTING = 0x10000001;
     public static final int DISCONNECTING = 0x10000000;
     private Handler handler = new Handler(){
@@ -74,11 +77,13 @@ public class MyActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         SplashScreen splashScreen = new SplashScreen(this,R.style.mydialog,R.layout.layout_splash);
-  //      splashScreen.show();
+        splashScreen.show();
         netWorkThread = new Thread(new NetworkAvailableMannager(this,handler));
         netWorkThread.start();
         customizeActionBar();
         initView();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_TIME_TICK);
     }
 
     private void initView(){
@@ -160,5 +165,10 @@ public class MyActivity extends FragmentActivity {
         getActionBar().setDisplayShowCustomEnabled(true);
         View actionbarLayout = LayoutInflater.from(this).inflate(R.layout.actionbar_style, null);
         getActionBar().setCustomView(actionbarLayout);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

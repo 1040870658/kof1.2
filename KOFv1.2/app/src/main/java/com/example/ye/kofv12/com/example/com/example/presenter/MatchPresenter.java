@@ -10,6 +10,10 @@ import com.example.ye.kofv12.com.example.model.MatchModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -65,13 +69,81 @@ public class MatchPresenter implements Runnable{
             String requestToday = DataURL + today + "&scroll_times=0&tz=-8";
             String requestTomorrow = DataURL + tomorrow + "&scroll_times=0&tz=-8";
             //  proceedData(NetWorkConnection.get(client,requestYesterday));
-            proceedData(NetWorkConnection.get(client, requestToday));
+            //proceedData(NetWorkConnection.get(client, requestToday));
             //  proceedData(NetWorkConnection.get(client,requestTomorrow));
+            modelProceeder(NetWorkConnection.get(client,requestToday));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void modelProceeder(String html){
+        String allBegin = "tr";
+        String childTag = "td";
+        String atrRel = "rel";
+        String atrId = "id";
+        String classTimes = "times";
+        String classRound = "round";
+        String classAway = "home";
+        String classHome = "away";
+        String classStat = "stat";
+        String tagTh = "th";
+        String atrImg = "img";
+        String atrSrc = "src";
+        MatchModel matchModel;
+
+        int groupNum = -1;
+        ArrayList<String > titles = new ArrayList<String>();
+        try{
+            JSONObject jsonObject = new JSONObject(html);
+            html = jsonObject.getString("html");
+            Document document = Jsoup.parse(html);
+            Elements body = document.getElementsByTag(allBegin);
+            Elements child;
+            Element away;
+            Element home;
+            Elements stat;
+            Elements group = document.getElementsByTag(tagTh);
+            for(Element item : group){
+                if(titles.contains(item.text()))
+                    continue;
+                titles.add(item.text());
+            }
+            for(Element element : body){
+                child = element.getElementsByTag(childTag);
+                if(child == null || child.size() <= 0){
+                    groupNum++;
+                    matchModels[groupNum] = new ArrayList();
+                    continue;
+                }
+                matchModel = new MatchModel();
+                matchModel.setRel(element.attr(atrRel));
+                matchModel.setId(element.attr(atrId));
+                matchModel.setRound(element.getElementsByClass(classRound).get(0).text());
+                away = element.getElementsByClass(classAway).get(0);
+                home = element.getElementsByClass(classHome).get(0);
+                stat = element.getElementsByClass(classStat);
+                matchModel.setAwayName(away.text());
+                matchModel.setAwaySrc(away.select(atrImg).attr(atrSrc));
+                matchModel.setHomeName(home.text());
+                matchModel.setHomeSrc(home.select(atrImg).attr(atrSrc));
+                matchModel.setTime(element.getElementsByClass(classTimes).get(0).text());
+                if(stat != null && stat.size() > 0) {
+                    matchModel.setStat(stat.get(0).text());
+                }
+                matchModels[groupNum].add(matchModel);
+            }
+            Bundle bundle = new Bundle();
+            //bundle.putString("html",html);
+            // bundle.putParcelableArrayList("matchInfo", matchModels);
+            bundle.putStringArrayList("titles",titles);
+            Message message = new Message();
+            message.setData(bundle);
+            handler.sendMessage(message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     private void proceedData(String html) {
         try {
             JSONObject jsonObject = new JSONObject(html);
@@ -84,8 +156,8 @@ public class MatchPresenter implements Runnable{
             String liveEnd = "</i>";
             String matchBegin = "tr rel=\"";
             String idBegin = "\" id=\"";
-            String idEnd = "\" class=\"matchItem\">";
-            String timeBegin = "td class=\"times\">";
+            String idEnd = "\" class=\"matchItem\"  >";
+            String timeBegin = "td class=\"times\"";
             String cut_timeEnd = "</td>";
             String roundBegin = "td class=\"round\">";
             String roundEnd = "</td>";

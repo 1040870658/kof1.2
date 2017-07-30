@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 
+import com.bumptech.glide.Glide;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -16,16 +17,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  */
 
 public class NewsScrollListener extends OnScrollListener {
-    private ImageLoader imageLoader;
+    //private ImageLoader imageLoader;
     private Context context;
     private Handler handler;
     public static int page = 1;
 
     private final boolean pauseOnScroll;
-    public NewsScrollListener(ImageLoader imageLoader, Context context, Handler handler, boolean pauseOnScroll) {
+    public NewsScrollListener( Context context, Handler handler, boolean pauseOnScroll) {
         super();
         this.pauseOnScroll = pauseOnScroll;
-        this.imageLoader = imageLoader;
         this.context = context;
         this.handler = handler;
     }
@@ -35,7 +35,8 @@ public class NewsScrollListener extends OnScrollListener {
         super.onScrollStateChanged(recyclerView, newState);
         switch (newState){
             case RecyclerView.SCROLL_STATE_IDLE:
-                imageLoader.resume();
+                //imageLoader.resume();
+                Glide.with(context).resumeRequests();
                 if(isVisBottom(recyclerView)){
                     Message msg = new Message();
                     msg.arg1 = ++page;
@@ -45,7 +46,8 @@ public class NewsScrollListener extends OnScrollListener {
                 break;
             case RecyclerView.SCROLL_STATE_DRAGGING:
                 if(pauseOnScroll) {
-                    imageLoader.pause();
+                    Glide.with(context).pauseRequests();
+                    //imageLoader.pause();
                 }
                 break;
         }

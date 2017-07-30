@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.ye.kofv12.CommentActivity;
 import com.example.ye.kofv12.R;
+import com.example.ye.kofv12.com.example.com.example.presenter.DetailPresenter;
 import com.example.ye.kofv12.com.example.model.NewsModel;
 
 import java.lang.ref.WeakReference;
@@ -38,25 +39,40 @@ public class DetailActivity extends Activity{
     private Handler delayHandler;
     private TextView textView;
     private ProgressBar progressBar;
+    private DetailPresenter detailPresenter;
     private String url = "https://www.dongqiudi.com/article/";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail);
+        textView = (TextView) findViewById(R.id.tv_html);
         delayHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                webView.setVisibility(View.VISIBLE);
+                switch (msg.what){
+
+                    case DetailPresenter.REQUEST_FINISHED:
+                        webView.loadData(msg.getData().getString("html"),"text/html","UTF-8");
+                        webView.setVisibility(View.VISIBLE);
+                        break;
+                    case 0:
+                        textView.setText(msg.getData().getString("html"));
+                        webView.setVisibility(View.INVISIBLE);
+                        break;
+                        default:
+                            webView.setVisibility(View.VISIBLE);
+                }
             }
         };
-        setContentView(R.layout.activity_detail);
         news = getIntent().getExtras().getParcelable("news");
         customizeActionBar();
-        textView = (TextView) findViewById(R.id.tv_html);
         textView.setMovementMethod(new ScrollingMovementMethod());
         progressBar = (ProgressBar) findViewById(R.id.pb_detail);
         webView = (WebView) findViewById(R.id.wv_detail);
         webView.loadUrl(url+news.getId());
+       // webView.addJavascriptInterface(new HtmlJsHandler(),"showHtml");
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= 21) {
             webView.getSettings().setMixedContentMode( WebSettings.MIXED_CONTENT_ALWAYS_ALLOW );
         }
@@ -78,16 +94,31 @@ public class DetailActivity extends Activity{
                         "var links = document.getElementsByTagName('a');"+
                         "links[0].remove();" +
                         "links[links.length -1 ].remove();"+
+                        "nav.remove();"+
+                        "var footer = document.getElementById('footer');"+
+                        "var header = document.getElementById('header');"+
+                        "var btnOpen = document.getElementById('btn_open');"+
+                        "var r_btnOpen = btnOpen.parentNode;"+
+                        "var vote = document.getElementById('voteTemplate');"+
+                        "vote.remove();"+
+                        "r_btnOpen.remove();"+
+                        "header.remove();"+
+                        "footer.remove();"+
+                        "var btns = document.getElementsByClassName('btn');"+
+                        "for(var r_btn in btns){"+
+                        "r_btn.parentNode.remove();}"+
                         "window.scrollBy(0,-119)"+
                         "}";
+              //  view.loadUrl("javascript:window.showHtml.showHtml('<head>'+" +
+                //        "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
                 //创建方法
-                view.loadUrl(filter);
+               view.loadUrl(filter);
                 view.loadUrl("javascript:hide();");
                 view.scrollBy(0,120);
-                delayHandler.sendEmptyMessageDelayed(0,100);
+                delayHandler.sendEmptyMessageDelayed(1,10);
                 progressBar.setVisibility(View.GONE);
                 //加载方法
-               // view.loadUrl("javascript:hideOther();");
+            //    view.loadUrl("javascript:hideOther();");
             }
         });
     }
@@ -96,8 +127,15 @@ public class DetailActivity extends Activity{
         @JavascriptInterface
         public void showHtml(String html){
             Log.e("html",html);
+           /* Message message = new Message();
+            Bundle bundle = new Bundle();
+            bundle.putString("html",html);
+            message.what = 0;
+            message.setData(bundle);
+            delayHandler.sendMessage(message);*/
+            new Thread(new DetailPresenter(delayHandler,html)).start();
             //textView.setText(html);
-            //webView.setVisibility(View.INVISIBLE);
+           // webView.setVisibility(View.INVISIBLE);
         }
     }
     void customizeActionBar() {

@@ -110,9 +110,11 @@ public class DecoratorModel {
         groupColor = new ArrayList(groupNum);
         groupTextColor = new ArrayList(groupNum);
         groupPositions.add(0);
+        int totalPos = 0;
         for(int i = 0;i != groupNum;i ++){
             if(i != 0){
-                groupPositions.add(datas.get(i - 1).size());
+                totalPos += datas.get(i - 1).size();
+                groupPositions.add(totalPos);
                 //groupPositions[i] = 6;
             }
             groupColor.add(resources.getColor(R.color.light_gray));

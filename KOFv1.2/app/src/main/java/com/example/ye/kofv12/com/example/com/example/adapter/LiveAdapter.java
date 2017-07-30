@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ye.kofv12.R;
 import com.example.ye.kofv12.com.example.com.example.view.CommentTextView;
 import com.example.ye.kofv12.com.example.model.MatchModel;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -37,8 +37,10 @@ public class LiveAdapter extends GroupAdapter {
         LiveViewHolder liveViewHolder = (LiveViewHolder)holder;
         MatchModel matchModel = (MatchModel) data.get(position);
         liveViewHolder.homeTextView.setText(matchModel.getHomeName());
-        ImageLoader.getInstance().displayImage(matchModel.getHomeSrc(),liveViewHolder.homeImageView);
-        ImageLoader.getInstance().displayImage(matchModel.getAwaySrc(),liveViewHolder.awayImageView);
+        //ImageLoader.getInstance().displayImage(matchModel.getHomeSrc(),liveViewHolder.homeImageView);
+        //ImageLoader.getInstance().displayImage(matchModel.getAwaySrc(),liveViewHolder.awayImageView);
+        Glide.with(context).load(matchModel.getHomeSrc()).into(liveViewHolder.homeImageView);
+        Glide.with(context).load(matchModel.getAwaySrc()).into(liveViewHolder.awayImageView);
         liveViewHolder.awayTextView.setText(matchModel.getAwayName());
         liveViewHolder.roundTextView.setText(matchModel.getRound());
         liveViewHolder.timeTextView.setText(matchModel.getTime());
