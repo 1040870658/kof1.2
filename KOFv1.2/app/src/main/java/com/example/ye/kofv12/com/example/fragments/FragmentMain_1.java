@@ -90,7 +90,7 @@ public class FragmentMain_1 extends Fragment{
                 return subfragments.size();
             }
         };
-        /*viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
 
@@ -105,7 +105,7 @@ public class FragmentMain_1 extends Fragment{
             public void onPageScrollStateChanged(int i) {
 
             }
-        });*/
+        });
         viewPager.setAdapter(pagerAdapter);
     }
 

@@ -2,10 +2,9 @@ package com.example.ye.kofv12.com.example.com.example.listener;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
-import com.example.ye.kofv12.com.example.DetailActivity;
+import com.example.ye.kofv12.DetailActivity;
 import com.example.ye.kofv12.com.example.model.NewsModel;
 
 /**

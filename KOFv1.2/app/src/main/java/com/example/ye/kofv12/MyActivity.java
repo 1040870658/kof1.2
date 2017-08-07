@@ -3,16 +3,20 @@ package com.example.ye.kofv12;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -26,16 +30,19 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.ye.kofv12.aidl.INewsPoll;
 import com.example.ye.kofv12.com.example.StartReceiver;
 import com.example.ye.kofv12.com.example.com.example.util.SplashScreen;
 import com.example.ye.kofv12.com.example.fragments.FragmentMain_1;
 import com.example.ye.kofv12.com.example.fragments.FragmentMain_2;
 import com.example.ye.kofv12.com.example.fragments.FragmentMain_3;
 import com.example.ye.kofv12.com.example.fragments.*;
+import com.example.ye.kofv12.com.example.model.NewsModel;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_1;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_2;
 import com.example.ye.kofv12.com.example.subfragments.SubFragment_1_3;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,13 +53,14 @@ public class MyActivity extends FragmentActivity {
     private DrawerLayout drawerLayout;
     private LinearLayout drawerSetting;
     private FragmentTabHost mainContent;
+    private NewsConnector newsConnector;
     private int[] tablayouts = new int[]{
             R.layout.tablayout_m1,
             R.layout.tablayout_m2,
             R.layout.tablayout_m3,
             R.layout.tablayout_m4
     };
-    private StartReceiver receiver;
+    private INewsPoll mbinder;
     public static final int CONNETCTING = 0x10000001;
     public static final int DISCONNECTING = 0x10000000;
     public static ExecutorService executorService = Executors.newCachedThreadPool();
@@ -80,16 +88,59 @@ public class MyActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
-        SplashScreen splashScreen = new SplashScreen(this,R.style.mydialog,R.layout.layout_splash);
-        splashScreen.show();
+        startDetailForNotification();
         netWorkThread = new Thread(new NetworkAvailableMannager(this,handler));
         netWorkThread.start();
         customizeActionBar();
         initView();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_TIME_TICK);
+        newsConnector = new NewsConnector();
+        Intent intent = new Intent(this,MainService.class);
+        bindService(intent,newsConnector,BIND_AUTO_CREATE);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        new Thread(new BinderRunnable(mbinder,false)).start();
+        super.onStart();
+    }
+
+    public INewsPoll getBinder(){
+        return mbinder;
+    }
+
+    private void startDetailForNotification(){
+        Bundle detailBundle= getIntent().getExtras();
+
+        if(detailBundle != null) {
+            NewsModel detail = detailBundle.getParcelable("news");
+            if(detail != null) {
+                Intent detailIntent = new Intent(this, DetailActivity.class);
+                detailIntent.putExtra("news", detail);
+                startActivity(detailIntent);
+            }
+        }
+        else {
+            SplashScreen splashScreen = new SplashScreen(this, R.style.mydialog, R.layout.layout_splash);
+            splashScreen.show();
+        }
+    }
+    private class NewsConnector implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mbinder = INewsPoll.Stub.asInterface(service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    }
     private void initView(){
         drawerLayout = (DrawerLayout)findViewById(R.id.main_container);
         drawerSetting = (LinearLayout)findViewById(R.id.main_drawer);
@@ -113,6 +164,12 @@ public class MyActivity extends FragmentActivity {
         else{
             drawerLayout.openDrawer(drawerSetting);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        startDetailForNotification();
     }
 
     @Override
@@ -172,7 +229,32 @@ public class MyActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        new Thread(new BinderRunnable(mbinder,true)).start();
+    }
+
+    @Override
     protected void onDestroy() {
+        unbindService(newsConnector);
         super.onDestroy();
+    }
+    private class BinderRunnable implements Runnable{
+        private WeakReference<INewsPoll> mbinder;
+        private boolean state;
+        public BinderRunnable(INewsPoll mbinder,boolean state){
+            this.mbinder = new WeakReference<INewsPoll>(mbinder);
+            this.state = state;
+        }
+        @Override
+        public void run() {
+            if(mbinder.get() != null){
+                try {
+                    mbinder.get().modifyState(state);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

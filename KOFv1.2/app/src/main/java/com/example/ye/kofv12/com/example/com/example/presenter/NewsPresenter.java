@@ -137,8 +137,16 @@ public class NewsPresenter {
             tmp.setImage(img);
             hotNews.add(tmp);
         }
-        if(hotNews != null && hotNews.size() != 0 && handler.get() != null)
-             handler.get().sendEmptyMessage(HOTNEWSFINISH);
+        if(hotNews != null && hotNews.size() != 0 && handler.get() != null) {
+            for(NewsModel hot : hotNews){
+                for(NewsModel item:news){
+                    if(item.getId() == hot.getId()){
+                        hot.setComment_total(item.getComment_total());
+                    }
+                }
+            }
+            handler.get().sendEmptyMessage(HOTNEWSFINISH);
+        }
     }
 
     private void setNews(String response) {

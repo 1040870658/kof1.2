@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ye.kofv12.MyActivity;
 import com.example.ye.kofv12.R;
+import com.example.ye.kofv12.aidl.INewsPoll;
 import com.example.ye.kofv12.com.example.com.example.adapter.HotNewsPageAdapter;
 import com.example.ye.kofv12.com.example.com.example.adapter.OtherAdapter;
 import com.example.ye.kofv12.com.example.com.example.adapter.VideoAdapter;
@@ -73,6 +74,7 @@ public class SubFragment_1_1 extends Fragment implements SwipeRefreshLayout.OnRe
     //private Thread thread;
     private int type;
     private NewsPresenter newsPresenter;
+    private INewsPoll mbinder;
 
 
     @Override

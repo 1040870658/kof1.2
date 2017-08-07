@@ -12,6 +12,7 @@
         android:theme="@android:style/Theme.Holo.Light" >
         <activity
             android:name=".MyActivity"
+            android:launchMode="singleTask"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,19 +20,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".com.example.DetailActivity"
+        <activity android:name=".DetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
+            android:process=":detail"
             />
-        <activity android:name=".com.example.com.example.VideoActivity"
+        <activity android:name=".VideoActivity"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".CommentActivity"
             android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             />
-
+        <service android:name=".MainService"
+            android:process=":polling"/>
     </application>
 
 </manifest>
